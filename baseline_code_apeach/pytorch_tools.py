@@ -29,7 +29,7 @@ class EarlyStopping:
         self.trace_func = trace_func
 
 
-    def __call__(self, model, val_loss=None, mIou=None):
+    def __call__(self, model, val_loss=None, mIoU=None):
         if val_loss:
             score = -val_loss
         
@@ -46,8 +46,8 @@ class EarlyStopping:
                 self.save_checkpoint_loss(val_loss, model)
                 self.counter = 0
 
-        elif mIou:
-            score = mIou
+        elif mIoU:
+            score = mIoU
 
             if self.best_score is None:
                 self.best_score = np.inf

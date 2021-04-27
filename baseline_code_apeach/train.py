@@ -333,7 +333,7 @@ def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, tr
         # run["epoch/val_loss"].log(val_loss)
         # run["epoch/f1_score"].log(f1)
 
-        early_stopping(model=model, mIou=mIoU)
+        early_stopping(model=model, mIoU=mIoU)
         if early_stopping.early_stop:
             print("Early Stopping")
             break
