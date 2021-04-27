@@ -50,6 +50,7 @@ class EarlyStopping:
             score = mIou
 
             if self.best_score is None:
+                self.best_score = np.inf
                 self.save_checkpoint_score(score, model)
             elif score < self.best_score + self.delta:
                 self.counter += 1
@@ -70,7 +71,7 @@ class EarlyStopping:
 
 
     def save_checkpoint_score(self, score, model):
-        '''Saves model when validation loss decrease.'''
+        '''Saves model when mIoU score increase.'''
         if self.verbose:
             self.trace_func(f'score loss increased ({self.best_score:.6f} --> {score:.6f}).  Saving model ...')
         torch.save(model.state_dict(), self.path)
