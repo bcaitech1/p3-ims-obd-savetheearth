@@ -7,7 +7,143 @@ import numpy as np
 import timm
 from pprint import pprint
 
+class Deconvnet_vgg(nn.Module):
+    def __init__(self, num_classes):
+        super(Deconvnet_vgg,self).__init__()
+        backbone = torchvision.models.vgg16(pretrained=True)
+        # self.pretrained_model = vgg16(pretrained = True)
+        # features, classifiers = list(self.pretrained_model.features.children()), list(self.pretrained_model.classifier.children())
 
+        def DCB(in_channels, out_channels, kernel_size=3, stride=1, padding=1):
+            return nn.Sequential(nn.ConvTranspose2d(in_channels=in_channels, 
+                                            out_channels=out_channels,
+                                            kernel_size=kernel_size,
+                                            stride=stride, 
+                                            padding=padding),
+                                  nn.BatchNorm2d(out_channels),
+                                  nn.ReLU(inplace=True)) 
+
+        self.features_map1 = nn.Sequential(*backbone.features[0:4]) #conv1(maxpooling 전까지)
+        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, ceil_mode=True,return_indices=True)
+
+        self.features_map2 = nn.Sequential(*backbone.features[5:9]) #conv2(maxpooling 전까지)
+        self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2, ceil_mode=True,return_indices=True)
+
+        self.features_map3 = nn.Sequential(*backbone.features[10:16]) #conv3(maxpooling 전까지)
+        self.pool3 = nn.MaxPool2d(kernel_size=2, stride=2, ceil_mode=True,return_indices=True)
+
+        self.features_map4 = nn.Sequential(*backbone.features[17:23]) #conv4(maxpooling 전까지)
+        self.pool4 = nn.MaxPool2d(kernel_size=2, stride=2, ceil_mode=True,return_indices=True)
+
+        self.features_map5 = nn.Sequential(*backbone.features[24:30]) #conv5(maxpooling 전까지)
+        self.pool5 = nn.MaxPool2d(kernel_size=2, stride=2, ceil_mode=True,return_indices=True)
+        
+        # fc6
+        self.fc6 = nn.Conv2d(512, 4096, 7, 1, 0)
+        self.relu6 = nn.ReLU(inplace=True)
+        self.drop6 = nn.Dropout2d(0.5)
+
+        # fc7
+        self.fc7 = nn.Conv2d(4096, 4096, 1, 1, 0)
+        self.relu7 = nn.ReLU(inplace=True)
+        self.drop7 = nn.Dropout2d(0.5)
+
+        # fc6-deconv
+        self.fc6_deconv = DCB(4096, 512, 7, 1, 0)
+
+        #unpool5 #14*14
+        self.unpool5 = nn.MaxUnpool2d(2,stride = 2)
+        self.deconv5_1 = DCB(512, 512, 3, 1, 1)
+        self.deconv5_2 = DCB(512, 512, 3, 1, 1)
+        self.deconv5_3 = DCB(512, 512, 3, 1, 1)
+
+        #unpool4 #28*28
+        self.unpool4 = nn.MaxUnpool2d(2,stride = 2)
+        self.deconv4_1 = DCB(512, 512, 3, 1, 1)
+        self.deconv4_2 = DCB(512, 512, 3, 1, 1)
+        self.deconv4_3 = DCB(512, 256, 3, 1, 1)
+       
+        #unpool4 #56*56
+        self.unpool3 = nn.MaxUnpool2d(2,stride = 2)
+        self.deconv3_1 = DCB(256, 256, 3, 1, 1)
+        self.deconv3_2 = DCB(256, 256, 3, 1, 1)
+        self.deconv3_3 = DCB(256, 128, 3, 1, 1)
+
+        #unpool4 #112*112
+        self.unpool2 = nn.MaxUnpool2d(2,stride = 2)
+        self.deconv2_1 = DCB(128, 128, 3, 1, 1)
+        self.deconv2_2 = DCB(128, 64, 3, 1, 1)
+
+        #unpool4 #224*224
+        self.unpool1 = nn.MaxUnpool2d(2,stride = 2)
+        self.deconv1_1 = DCB(64, 64, 3, 1, 1)
+        self.deconv1_2 = DCB(64, 64, 3, 1, 1)
+
+        #Score
+        self.score_fr = nn.Conv2d(64, num_classes, 1, 1, 0, 1)
+        
+    def forward(self, x):
+        max1 = h = self.features_map1(x)
+        h, pool1_indices = self.pool1(h)
+
+        max2 = h = self.features_map2(h)
+        h, pool2_indices = self.pool2(h)
+
+        max3 = h = self.features_map3(h)
+        h, pool3_indices = self.pool3(h)
+
+        max4 = h = self.features_map4(h)
+        h, pool4_indices = self.pool4(h)
+
+        max5 = h = self.features_map5(h)
+        h, pool5_indices = self.pool5(h)
+
+        #fc6
+        h = self.fc6(h)
+        h = self.relu6(h)
+        h = self.drop6(h)
+
+        #fc7
+        h = self.fc7(h)
+        h = self.relu7(h)
+        h = self.drop7(h)     
+
+        #fc6-deconv
+        h = self.fc6_deconv(h)
+
+        #deconv5
+        h = self.unpool5(h, pool5_indices)
+        h = self.deconv5_1(h)
+        h = self.deconv5_2(h)
+        h = self.deconv5_3(h)
+
+        #deconv4
+        h = self.unpool4(h, pool4_indices)
+        h = self.deconv4_1(h)
+        h = self.deconv4_2(h)
+        h = self.deconv4_3(h)
+
+        #deconv3
+        h = self.unpool3(h, pool3_indices)
+        h = self.deconv3_1(h)
+        h = self.deconv3_2(h)
+        h = self.deconv3_3(h)
+
+        #deconv2
+        h = self.unpool2(h, pool2_indices)
+        h = self.deconv2_1(h)
+        h = self.deconv2_2(h)
+
+        #deconv1
+        h = self.unpool1(h, pool1_indices)
+        h = self.deconv1_1(h)
+        h = self.deconv1_2(h)
+
+        score = self.score_fr(h)
+
+        return score
+
+        
 class FCN8s(nn.Module):
     '''
         Backbone: VGG-16
