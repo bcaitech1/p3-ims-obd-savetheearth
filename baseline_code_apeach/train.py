@@ -24,7 +24,7 @@ from utils import label_accuracy_score, add_hist
 
 
 class CFG:
-    PROJECT_PATH = "/opt/ml/save_the_earth" # 기본 프로젝트 디렉터리
+    PROJECT_PATH = "/opt/ml/p3-ims-obd-savetheearth" # 기본 프로젝트 디렉터리
     BASE_DATA_PATH = '/opt/ml/input/data' # 데이터가 저장된 디렉터리
     coco_train_json = 'train.json' # coco annotation train json 파일
     coco_val_json = 'val.json' # coco annotation validation json 파일
@@ -38,7 +38,7 @@ class CFG:
     seed = 42 # random seed
     num_workers = 4 # 워커의 개수
 
-    model = "FCN8s" # model
+    model = "Deconvnet_vgg" # model
     optimizer = "Adam" # optimizer
     criterion = "cross_entropy" # loss function
     scheduler = "StepLR" # learning rate scheduler
@@ -164,7 +164,6 @@ def data_visualization():
     pass
 
 
-
 # train dataset과 validation dataset에 해당하는 loader를 각각 가져온다.
 def get_data_utils():
 
@@ -286,7 +285,7 @@ def func_eval(model, criterion, val_dataset, val_loader):
 
 def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, train_loader, val_loader):
     print ("Start training.\n")
-
+    torch.cuda.empty_cache() #비우고 시작
     early_stopping = EarlyStopping(patience=CFG.patience, path=os.path.join(CFG.model_path, CFG.model_save_name), verbose=True) # early stopping initializing
 
     for epoch in tqdm(range(CFG.nepochs)):
