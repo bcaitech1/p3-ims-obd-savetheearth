@@ -14,7 +14,7 @@ from pprint import pprint
 from recycle_dataset import RecycleDataset
 
 class CFG:
-    PROJECT_PATH = "/opt/ml/save_the_earth" # 기본 프로젝트 디렉터리
+    PROJECT_PATH = "/opt/ml/p3-ims-obd-savetheearth" # 기본 프로젝트 디렉터리
     BASE_DATA_PATH = '/opt/ml/input/data' # 데이터가 저장된 디렉터리
     coco_test_json = 'test.json' # coco annotation test json 파일
 
@@ -24,7 +24,7 @@ class CFG:
     seed = 42 # random seed
     num_workers = 4 # 워커의 개수
 
-    model = "FCN8s" # model
+    model = "Deconvnet_vgg" # model
     test_augmentation = "BaseTestAugmentation"
     model_name = "baseline_model.pt"
 

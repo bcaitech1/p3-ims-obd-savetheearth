@@ -21,7 +21,7 @@ from optimizer import create_optimizer
 from scheduler import create_scheduler
 from pytorch_tools import EarlyStopping
 from utils import label_accuracy_score, add_hist
-
+import wandb
 
 class CFG:
     PROJECT_PATH = "/opt/ml/p3-ims-obd-savetheearth" # 기본 프로젝트 디렉터리
@@ -87,6 +87,7 @@ def get_config():
     parser.add_argument('--model_save_name', type=str, default=CFG.model_save_name, help='model save name')
 
     args = parser.parse_args()
+    wandb.config.update(args)
     # print(args) # for check arguments
     
     # 키워드 인자로 받은 값을 CFG로 다시 저장합니다.
@@ -342,6 +343,12 @@ def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, tr
 
 def main():
     # check pytorch version & whether using cuda or not
+    wandb.init()
+    wandb.run.name = 'deconvnet_1'
+    # generted run ID로 하고 싶다면 다음과 같이 쓴다.
+    # wandb.run.name = wandb.run.id
+    wandb.run.save()
+    
     print(f"PyTorch version:[{torch.__version__}]")
     print(f"device:[{CFG.device}]")
     print(f"GPU 사용 가능 여부: {torch.cuda.is_available()}")
@@ -354,6 +361,7 @@ def main():
     # data_visualization(train_df)
     train_dataset, val_dataset, train_loader, val_loader = get_data_utils()
     model, criterion, optimizer, scheduler = get_model()
+    wandb.watch(model)
     # func_eval(model, criterion, val_dataset, val_loader)
     train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, train_loader, val_loader)
 
