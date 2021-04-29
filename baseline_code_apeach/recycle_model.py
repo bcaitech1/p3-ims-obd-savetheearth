@@ -6,6 +6,20 @@ import torchvision
 import numpy as np
 import timm
 from pprint import pprint
+# from efficientnet_pytorch import EfficientNet
+from segmentation_models_pytorch.unet import Unet
+# from efficientunet import *
+
+class EffUNet(nn.Module):
+    def __init__(self, num_classes):
+        super(EffUNet,self).__init__()
+        self.unet = Unet('efficientnet-b5', encoder_weights="imagenet", classes=num_classes, activation=None)
+        # self.unet = get_efficientunet_b5(out_channels=12, pretrained=True)
+
+    def forward(self, x):
+        score = self.unet(x)
+
+        return score
 
 class Deconvnet_vgg(nn.Module):
     def __init__(self, num_classes):
@@ -234,15 +248,13 @@ class FCN8s(nn.Module):
         return torch.from_numpy(weight).float()
 
 
-
-
 # for checking forward progress
 if __name__ == "__main__":
     # backbone = torchvision.models.vgg16(pretrained=True)
     # print(backbone)
     # x = torch.randn(2, 3, 512, 512)
-    model = FCN8s()
-    print(model)
+    # model = FCN8s()
+    # print(model)
     # output = model(x)
     # print(output.shape)
     pass

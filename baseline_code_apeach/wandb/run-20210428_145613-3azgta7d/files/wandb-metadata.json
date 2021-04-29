@@ -1,0 +1,43 @@
+{
+    "os": "Linux-4.4.0-59-generic-x86_64-with-debian-buster-sid",
+    "python": "3.7.7",
+    "heartbeatAt": "2021-04-28T14:56:14.471594",
+    "startedAt": "2021-04-28T14:56:13.044199",
+    "docker": null,
+    "gpu": "Tesla P40",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [
+        "--learning_rate=0.0001",
+        "--batch_size=4",
+        "--nepochs=100",
+        "--resize_width=512",
+        "--resize_height=512",
+        "--patience=5",
+        "--seed=42",
+        "--num_workers=4",
+        "--model=EffUNet",
+        "--optimizer=Adam",
+        "--criterion=dice",
+        "--scheduler=StepLR",
+        "--train_augmentation=BaseTrainAugmentation",
+        "--val_augmentation=BaseTrainAugmentation",
+        "--kfold=0",
+        "--print_freq=1",
+        "--description=effunet 4 Trial",
+        "--model_save_name=effunet_4.pt"
+    ],
+    "state": "running",
+    "program": "./train.py",
+    "codePath": "baseline_code_apeach/train.py",
+    "git": {
+        "remote": "https://github.com/bcaitech1/p3-ims-obd-savetheearth",
+        "commit": "56d8e95fd20c8d9b5a0f341ab72bbdba175b1f67"
+    },
+    "email": "9808gus@naver.com",
+    "root": "/opt/ml/p3-ims-obd-savetheearth",
+    "host": "082f1c82a2d0",
+    "username": "root",
+    "executable": "/opt/conda/bin/python3"
+}

@@ -1,0 +1,85 @@
+wandb_version: 1
+
+BASE_DATA_PATH:
+  desc: null
+  value: /opt/ml/input/data
+PROJECT_PATH:
+  desc: null
+  value: /opt/ml/p3-ims-obd-savetheearth
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.10.27
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.7.7
+    t:
+      1:
+      - 1
+      2:
+      - 1
+      4: 3.7.7
+      5: 0.10.27
+      8:
+      - 5
+batch_size:
+  desc: null
+  value: 8
+coco_train_json:
+  desc: null
+  value: train.json
+coco_val_json:
+  desc: null
+  value: val.json
+criterion:
+  desc: null
+  value: cross_entropy
+description:
+  desc: null
+  value: effunet First Trial
+kfold:
+  desc: null
+  value: 0
+learning_rate:
+  desc: null
+  value: 0.0001
+model:
+  desc: null
+  value: EffUNet
+model_save_name:
+  desc: null
+  value: effunet_baseline.pt
+nepochs:
+  desc: null
+  value: 100
+num_workers:
+  desc: null
+  value: 4
+optimizer:
+  desc: null
+  value: Adam
+patience:
+  desc: null
+  value: 5
+print_freq:
+  desc: null
+  value: 1
+resize_height:
+  desc: null
+  value: 512
+resize_width:
+  desc: null
+  value: 512
+scheduler:
+  desc: null
+  value: StepLR
+seed:
+  desc: null
+  value: 42
+train_augmentation:
+  desc: null
+  value: BaseTrainAugmentation
+val_augmentation:
+  desc: null
+  value: BaseTrainAugmentation

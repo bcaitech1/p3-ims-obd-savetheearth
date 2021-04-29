@@ -1,0 +1,26 @@
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [wandb_setup.py:_flush():69] setting env: {}
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [wandb_init.py:_log_setup():336] Logging user logs to /opt/ml/p3-ims-obd-savetheearth/baseline_code_apeach/wandb/run-20210428_053842-lgka5xvj/logs/debug.log
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [wandb_init.py:_log_setup():337] Logging internal logs to /opt/ml/p3-ims-obd-savetheearth/baseline_code_apeach/wandb/run-20210428_053842-lgka5xvj/logs/debug-internal.log
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [wandb_init.py:init():369] calling init triggers
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [wandb_init.py:init():376] wandb.init called with sweep_config: {}
+config: {}
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [wandb_init.py:init():418] starting backend
+2021-04-28 05:38:42,477 INFO    MainThread:13238 [backend.py:_multiprocessing_setup():71] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-04-28 05:38:42,489 INFO    MainThread:13238 [backend.py:ensure_launched():123] starting backend process...
+2021-04-28 05:38:42,496 INFO    MainThread:13238 [backend.py:ensure_launched():128] started backend process with pid: 13251
+2021-04-28 05:38:42,511 INFO    MainThread:13238 [wandb_init.py:init():423] backend started and connected
+2021-04-28 05:38:42,512 INFO    MainThread:13238 [wandb_init.py:init():465] updated telemetry
+2021-04-28 05:38:42,512 INFO    MainThread:13238 [wandb_init.py:init():484] communicating current version
+2021-04-28 05:38:43,323 INFO    MainThread:13238 [wandb_init.py:init():489] got version response 
+2021-04-28 05:38:43,323 INFO    MainThread:13238 [wandb_init.py:init():497] communicating run to backend with 30 second timeout
+2021-04-28 05:38:43,586 INFO    MainThread:13238 [wandb_init.py:init():522] starting run threads in backend
+2021-04-28 05:38:46,414 INFO    MainThread:13238 [wandb_run.py:_console_start():1524] atexit reg
+2021-04-28 05:38:46,414 INFO    MainThread:13238 [wandb_run.py:_redirect():1371] redirect: SettingsConsole.REDIRECT
+2021-04-28 05:38:46,415 INFO    MainThread:13238 [wandb_run.py:_redirect():1376] Redirecting console.
+2021-04-28 05:38:46,416 INFO    MainThread:13238 [wandb_run.py:_redirect():1438] Redirects installed.
+2021-04-28 05:38:46,416 INFO    MainThread:13238 [wandb_init.py:init():546] run started, returning control to user process
+2021-04-28 05:38:46,424 INFO    MainThread:13238 [wandb_run.py:_config_callback():749] config_cb None None {'PROJECT_PATH': '/opt/ml/p3-ims-obd-savetheearth', 'BASE_DATA_PATH': '/opt/ml/input/data', 'coco_train_json': 'train.json', 'coco_val_json': 'val.json', 'learning_rate': 0.0001, 'batch_size': 8, 'nepochs': 100, 'resize_width': 512, 'resize_height': 512, 'patience': 5, 'seed': 42, 'num_workers': 4, 'model': 'EffUNet', 'optimizer': 'Adam', 'criterion': 'cross_entropy', 'scheduler': 'StepLR', 'train_augmentation': 'BaseTrainAugmentation', 'val_augmentation': 'BaseTrainAugmentation', 'kfold': 0, 'print_freq': 1, 'description': 'effunet First Trial', 'model_save_name': 'effunet_baseline.pt'}
+2021-04-28 05:39:04,767 INFO    MainThread:13238 [wandb_watch.py:watch():39] Watching
+2021-04-28 08:05:13,051 INFO    MainThread:13238 [wandb_run.py:_atexit_cleanup():1494] got exitcode: 255
+2021-04-28 08:05:13,161 INFO    MainThread:13238 [wandb_run.py:_restore():1466] restore

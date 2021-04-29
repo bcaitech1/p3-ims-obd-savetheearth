@@ -56,7 +56,7 @@ class CFG:
 
 # Config Parsing
 def get_config():
-    parser = argparse.ArgumentParser(description="Recycle Segmentation")
+    parser = argparse.ArgumentParser(description="segmentation")
 
     # Container environment
     parser.add_argument('--PROJECT_PATH', type=str, default=CFG.PROJECT_PATH)
@@ -87,7 +87,6 @@ def get_config():
     parser.add_argument('--model_save_name', type=str, default=CFG.model_save_name, help='model save name')
 
     args = parser.parse_args()
-    wandb.config.update(args)
     # print(args) # for check arguments
     
     # 키워드 인자로 받은 값을 CFG로 다시 저장합니다.
@@ -121,6 +120,7 @@ def get_config():
     CFG.docs_path = os.path.join(CFG.PROJECT_PATH, CFG.docs_path)
     CFG.model_path = os.path.join(CFG.PROJECT_PATH, CFG.model_path)
     
+    return args
     # for check CFG
     # pprint.pprint(CFG.__dict__) 
 
@@ -247,6 +247,9 @@ def get_model():
 
 # evaluation function for validation data
 def func_eval(model, criterion, val_dataset, val_loader):
+    best = 0.0 #최고의 평가지표를 가진 모델로 최종 저장하기 위함 #여기서는 best mIoU model
+    best_model_wts = copy.deepcopy(model.state_dict())
+
     print ("Start validation.\n")
     model.eval() # make model evaluation mode
 
@@ -276,13 +279,17 @@ def func_eval(model, criterion, val_dataset, val_loader):
         val_loss = total_loss_sum / len(val_dataset)
 
     acc, acc_cls, mIoU, iu, fwavacc = label_accuracy_score(hist)
+    if best < mIou:
+        best = mIoU
+        best_model_wts = copy.deepcopy(model.state_dict())
+        print(f'==> best model saved - IoU : {best}')
+
     recycle = ['Background', 'UNKNOWN', 'General trash', 'Paper', 'Paper pack', 'Metal', 'Glass', 'Plastic', 'Styrofoam', 'Plastic bag', 'Battery', 'Clothing']
     mIoU_df = pd.DataFrame({
         'Recycle Type': recycle,
         'IoU': iu
     })
-    return val_loss, acc, mIoU, mIoU_df
-
+    return val_loss, acc, mIoU, mIoU_df, best_model_wts
 
 def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, train_loader, val_loader):
     print ("Start training.\n")
@@ -322,10 +329,16 @@ def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, tr
         # caculate train_loss
         train_loss = train_loss_sum / len(train_dataset)
 
-        # Print
+        # Print #validation
         if ((epoch % CFG.print_freq)==0) or (epoch==(CFG.nepochs - 1)):
-            val_loss, acc, mIoU, mIoU_df = func_eval(model, criterion, val_dataset, val_loader)
+            val_loss, acc, mIoU, mIoU_df,best_model_wts = func_eval(model, criterion, val_dataset, val_loader)
             print ("epoch:[%d] train_loss:[%.5f] val_loss:[%.5f] val_mIoU:[%.5f] val_pix_acc: [%.5f]" % (epoch, train_loss, val_loss, mIoU, acc))
+            wandb.log({
+                "Val Loss": val_loss,
+                "Train Loss":train_loss,
+                "mIoU" : mIoU,
+                "acc" : acc})
+
             print(mIoU_df)
 
         # run["epoch/accuracy"].log(accuracy)
@@ -338,15 +351,16 @@ def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, tr
             print("Early Stopping")
             break
 
-    print ("Done")
+    #load best_model(mIoU기준)
+    model.load_state_dict(best_model_wts)
+    torch.save(model.state_dict(), CFG.model_path+'/best_models' + CFG.model_save_name) #'' : for best_mIoU model saving
 
+    print ("Done")
 
 def main():
     # check pytorch version & whether using cuda or not
     wandb.init()
-    wandb.run.name = 'deconvnet_1'
-    # generted run ID로 하고 싶다면 다음과 같이 쓴다.
-    # wandb.run.name = wandb.run.id
+    wandb.run.name = CFG.description #set wandb run name
     wandb.run.save()
     
     print(f"PyTorch version:[{torch.__version__}]")
@@ -355,7 +369,9 @@ def main():
     print(f"GPU 이름: {torch.cuda.get_device_name(0)}")
     print(f"GPU 개수: {torch.cuda.device_count()}")
 
-    get_config()
+    args = get_config()
+    wandb.config.update(args)
+
     set_random_seed()
     # set_logging()
     # data_visualization(train_df)
@@ -368,3 +384,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""
+python3 ./train.py --learning_rate=0.0001 --batch_size=8 --nepochs=100 --resize_width=512 --resize_height=512\
+     --patience=5 --seed=42 --num_workers=4 --model="EffUNet" --optimizer="Adam" --criterion="dicebce" --scheduler="StepLR"\
+          --train_augmentation="BaseTrainAugmentation" --val_augmentation="BaseTrainAugmentation" --kfold=0 --print_freq=1\
+               --description="effunet 5 Trial" --model_save_name="effunet_5.pt"
+"""

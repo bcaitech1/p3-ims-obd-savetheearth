@@ -1,0 +1,86 @@
+2021-04-28 08:17:44,757 INFO    MainThread:14615 [wandb_setup.py:_flush():69] setting env: {}
+2021-04-28 08:17:44,758 INFO    MainThread:14615 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-04-28 08:17:44,758 INFO    MainThread:14615 [wandb_init.py:_log_setup():336] Logging user logs to /opt/ml/p3-ims-obd-savetheearth/baseline_code_apeach/wandb/run-20210428_081744-ky8zlk51/logs/debug.log
+2021-04-28 08:17:44,758 INFO    MainThread:14615 [wandb_init.py:_log_setup():337] Logging internal logs to /opt/ml/p3-ims-obd-savetheearth/baseline_code_apeach/wandb/run-20210428_081744-ky8zlk51/logs/debug-internal.log
+2021-04-28 08:17:44,758 INFO    MainThread:14615 [wandb_init.py:init():369] calling init triggers
+2021-04-28 08:17:44,758 INFO    MainThread:14615 [wandb_init.py:init():376] wandb.init called with sweep_config: {}
+config: {}
+2021-04-28 08:17:44,758 INFO    MainThread:14615 [wandb_init.py:init():418] starting backend
+2021-04-28 08:17:44,758 INFO    MainThread:14615 [backend.py:_multiprocessing_setup():71] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-04-28 08:17:44,769 INFO    MainThread:14615 [backend.py:ensure_launched():123] starting backend process...
+2021-04-28 08:17:44,774 INFO    MainThread:14615 [backend.py:ensure_launched():128] started backend process with pid: 14628
+2021-04-28 08:17:44,787 INFO    MainThread:14615 [wandb_init.py:init():423] backend started and connected
+2021-04-28 08:17:44,788 INFO    MainThread:14615 [wandb_init.py:init():465] updated telemetry
+2021-04-28 08:17:44,795 INFO    MainThread:14615 [wandb_init.py:init():484] communicating current version
+2021-04-28 08:17:45,651 INFO    MainThread:14615 [wandb_init.py:init():489] got version response 
+2021-04-28 08:17:45,651 INFO    MainThread:14615 [wandb_init.py:init():497] communicating run to backend with 30 second timeout
+2021-04-28 08:17:45,882 INFO    MainThread:14615 [wandb_init.py:init():522] starting run threads in backend
+2021-04-28 08:17:48,769 INFO    MainThread:14615 [wandb_run.py:_console_start():1524] atexit reg
+2021-04-28 08:17:48,769 INFO    MainThread:14615 [wandb_run.py:_redirect():1371] redirect: SettingsConsole.REDIRECT
+2021-04-28 08:17:48,770 INFO    MainThread:14615 [wandb_run.py:_redirect():1376] Redirecting console.
+2021-04-28 08:17:48,772 INFO    MainThread:14615 [wandb_run.py:_redirect():1438] Redirects installed.
+2021-04-28 08:17:48,772 INFO    MainThread:14615 [wandb_init.py:init():546] run started, returning control to user process
+2021-04-28 08:17:48,779 INFO    MainThread:14615 [wandb_run.py:_config_callback():749] config_cb None None {'PROJECT_PATH': '/opt/ml/p3-ims-obd-savetheearth', 'BASE_DATA_PATH': '/opt/ml/input/data', 'coco_train_json': 'train.json', 'coco_val_json': 'val.json', 'learning_rate': 0.0001, 'batch_size': 4, 'nepochs': 50, 'resize_width': 512, 'resize_height': 512, 'patience': 5, 'seed': 42, 'num_workers': 2, 'model': 'EffUNet', 'optimizer': 'Adam', 'criterion': 'cross_entropy', 'scheduler': 'StepLR', 'train_augmentation': 'BaseTrainAugmentation', 'val_augmentation': 'BaseTrainAugmentation', 'kfold': 0, 'print_freq': 1, 'description': 'effunet Second Trial', 'model_save_name': 'effunet_second.pt'}
+2021-04-28 08:18:00,321 INFO    MainThread:14615 [wandb_watch.py:watch():39] Watching
+2021-04-28 10:46:41,992 INFO    MainThread:14615 [wandb_run.py:_atexit_cleanup():1494] got exitcode: 0
+2021-04-28 10:46:41,994 INFO    MainThread:14615 [wandb_run.py:_restore():1466] restore
+2021-04-28 10:46:44,240 INFO    MainThread:14615 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 71311
+  total_bytes: 71311
+}
+
+2021-04-28 10:46:44,435 INFO    MainThread:14615 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 71311
+  total_bytes: 71311
+}
+
+2021-04-28 10:46:44,767 INFO    MainThread:14615 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 71311
+  total_bytes: 959835
+}
+
+2021-04-28 10:46:46,614 INFO    MainThread:14615 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 959835
+  total_bytes: 959835
+}
+
+2021-04-28 10:46:46,716 INFO    MainThread:14615 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 959835
+  total_bytes: 959835
+}
+
+2021-04-28 10:46:46,818 INFO    MainThread:14615 [wandb_run.py:_wait_for_finish():1616] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+  media_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 959835
+  total_bytes: 959835
+}
+
+2021-04-28 10:46:47,960 INFO    MainThread:14615 [wandb_run.py:_show_summary():1771] rendering summary
+2021-04-28 10:46:47,961 INFO    MainThread:14615 [wandb_run.py:_show_history():1809] rendering history
+2021-04-28 10:46:47,961 INFO    MainThread:14615 [wandb_run.py:_show_files():1838] logging synced files

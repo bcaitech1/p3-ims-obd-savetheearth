@@ -1,0 +1,30 @@
+2021-04-29 01:23:10,742 INFO    MainThread:19855 [internal.py:wandb_internal():91] W&B internal server running at pid: 19855, started at: 2021-04-29 01:23:10.741978
+2021-04-29 01:23:10,744 DEBUG   SenderThread:19855 [sender.py:send():160] send: header
+2021-04-29 01:23:10,744 INFO    WriterThread:19855 [datastore.py:open_for_write():77] open: /opt/ml/p3-ims-obd-savetheearth/baseline_code_apeach/wandb/run-20210429_012310-3fvqx54h/run-3fvqx54h.wandb
+2021-04-29 01:23:10,745 DEBUG   HandlerThread:19855 [handler.py:handle_request():120] handle_request: check_version
+2021-04-29 01:23:10,745 DEBUG   SenderThread:19855 [sender.py:send():160] send: request
+2021-04-29 01:23:10,745 DEBUG   SenderThread:19855 [sender.py:send_request():169] send_request: check_version
+2021-04-29 01:23:10,909 DEBUG   SenderThread:19855 [sender.py:send():160] send: run
+2021-04-29 01:23:11,131 DEBUG   HandlerThread:19855 [handler.py:handle_request():120] handle_request: run_start
+2021-04-29 01:23:11,135 DEBUG   HandlerThread:19855 [meta.py:__init__():39] meta init
+2021-04-29 01:23:11,135 DEBUG   HandlerThread:19855 [meta.py:__init__():53] meta init done
+2021-04-29 01:23:11,135 DEBUG   HandlerThread:19855 [meta.py:probe():210] probe
+2021-04-29 01:23:11,136 INFO    SenderThread:19855 [sender.py:_start_run_threads():654] run started: 3fvqx54h with start time 1619659390
+2021-04-29 01:23:11,136 DEBUG   SenderThread:19855 [sender.py:send():160] send: summary
+2021-04-29 01:23:11,136 INFO    SenderThread:19855 [sender.py:_save_file():781] saving file wandb-summary.json with policy end
+2021-04-29 01:23:11,142 DEBUG   HandlerThread:19855 [meta.py:_setup_git():200] setup git
+2021-04-29 01:23:11,157 DEBUG   HandlerThread:19855 [meta.py:_setup_git():207] setup git done
+2021-04-29 01:23:11,157 DEBUG   HandlerThread:19855 [meta.py:_save_pip():57] save pip
+2021-04-29 01:23:11,158 DEBUG   HandlerThread:19855 [meta.py:_save_pip():71] save pip done
+2021-04-29 01:23:11,158 DEBUG   HandlerThread:19855 [meta.py:_save_conda():78] save conda
+2021-04-29 01:23:13,851 DEBUG   HandlerThread:19855 [meta.py:_save_conda():86] save conda done
+2021-04-29 01:23:13,852 DEBUG   HandlerThread:19855 [meta.py:probe():252] probe done
+2021-04-29 01:23:13,859 DEBUG   SenderThread:19855 [sender.py:send():160] send: files
+2021-04-29 01:23:13,859 INFO    SenderThread:19855 [sender.py:_save_file():781] saving file wandb-metadata.json with policy now
+2021-04-29 01:23:13,864 DEBUG   HandlerThread:19855 [handler.py:handle_request():120] handle_request: status
+2021-04-29 01:23:13,865 DEBUG   SenderThread:19855 [sender.py:send():160] send: request
+2021-04-29 01:23:13,865 DEBUG   SenderThread:19855 [sender.py:send_request():169] send_request: status
+2021-04-29 01:23:14,045 DEBUG   SenderThread:19855 [sender.py:send():160] send: run
+2021-04-29 01:23:14,272 INFO    SenderThread:19855 [sender.py:send_run():555] updated run: 3fvqx54h
+2021-04-29 01:23:14,272 DEBUG   SenderThread:19855 [sender.py:send():160] send: config
+2021-04-29 01:23:23,142 WARNING MainThread:19855 [internal.py:wandb_internal():146] Internal process interrupt: 1

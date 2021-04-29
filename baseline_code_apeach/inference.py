@@ -24,9 +24,9 @@ class CFG:
     seed = 42 # random seed
     num_workers = 4 # 워커의 개수
 
-    model = "Deconvnet_vgg" # model
+    model = "EffUNet" # model
     test_augmentation = "BaseTestAugmentation"
-    model_name = "baseline_model.pt"
+    model_name = "effunet_4.pt"
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu') # GPU 메모리 사용
     submission_path = 'sample_submission.csv' # submission csv 파일
@@ -181,3 +181,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+'''
+실행 명령어 
+python3 ./inference.py --model_name="effunet_4.pt"
+'''
