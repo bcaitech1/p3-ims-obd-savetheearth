@@ -1,3 +1,4 @@
-./baseline_code_apeach/__pycache__
-./baseline_code_apeach/wandb
-./models
+__pycache__
+wandb
+models
+docs/
