@@ -1,0 +1,5 @@
+models
+.ipynb_checkpoints
+docs
+code/wandb
+code/__pycache__
