@@ -201,84 +201,44 @@ def get_model():
     criterion = create_criterion(CFG.criterion)
 
     # optimizer.py에 정의된 optimizer를 가져옵니다.
-    if CFG.optimizer == "Adam":
-        optimizer = create_optimizer(
-            CFG.optimizer,
-            params=[
-                {"params": model.seg_model.encoder.parameters(), "lr": CFG.learning_rate * 0.1},
-                {"params": model.seg_model.decoder.parameters()},
-                {"params": model.seg_model.segmentation_head.parameters()},
-            ],
-            lr = CFG.learning_rate,
-            weight_decay=1e-6
-        )
-    elif CFG.optimizer == "RAdam":
-        optimizer = create_optimizer(
-            CFG.optimizer,
-            params=[
-                {"params": model.seg_model.encoder.parameters(), "lr": CFG.learning_rate * 0.1},
-                {"params": model.seg_model.decoder.parameters()},
-                {"params": model.seg_model.segmentation_head.parameters()},
-            ],
-            lr = CFG.learning_rate,
-            betas=(0.9, 0.999),
-            eps= 1e-8,
-            weight_decay=0
-        )
-    elif CFG.optimizer == "AdamP":
-        optimizer = create_optimizer(
-            CFG.optimizer,
-            params=[
-                {"params": model.seg_model.encoder.parameters(), "lr": CFG.learning_rate * 0.1},
-                {"params": model.seg_model.decoder.parameters()},
-                {"params": model.seg_model.segmentation_head.parameters()},
-            ],
-            lr = CFG.learning_rate,
-            betas=(0.9, 0.999),
-            eps=1e-8,
-            weight_decay=0
-        )
-    elif CFG.optimizer == "AdamW":
-        optimizer = create_optimizer(
-            CFG.optimizer,
-            params=[
-                {"params": model.seg_model.encoder.parameters(), "lr": CFG.learning_rate * 0.1},
-                {"params": model.seg_model.decoder.parameters()},
-                {"params": model.seg_model.segmentation_head.parameters()},
-            ],
-            lr = CFG.learning_rate,
-            amsgrad=True
-        )
-    elif CFG.optimizer == "RMSprop":
-        optimizer = create_optimizer(
-            CFG.optimizer,
-            params=[
-                {"params": model.seg_model.encoder.parameters(), "lr": CFG.learning_rate * 0.1},
-                {"params": model.seg_model.decoder.parameters()},
-                {"params": model.seg_model.segmentation_head.parameters()},
-            ],
-            lr = CFG.learning_rate
-        )
+    optimizer_encoder = create_optimizer(
+        CFG.optimizer,
+        params=model.seg_model.encoder.parameters(),
+        lr = 1e-8
+    )
+
+    optimizer_decoder = create_optimizer(
+        CFG.optimizer,
+        params=[
+            {"params": model.seg_model.decoder.parameters()},
+            {"params": model.seg_model.segmentation_head.parameters()}
+        ],
+        lr = 1e-8
+    )
+    
 
     # scheduler.py에 정의된 scheduler를 가져옵니다.
-    if CFG.scheduler == "StepLR":
-        scheduler = create_scheduler(
-            CFG.scheduler,
-            optimizer=optimizer,
-            step_size=5,
-            gamma=0.95
-        )
-    elif CFG.scheduler == "CosineAnnealingWarmupRestarts":
-        scheduler = create_scheduler(
-            CFG.scheduler,
-            optimizer=optimizer,
-            first_cycle_steps=5,
-            cycle_mult=1.,
-            max_lr=1e-4,
-            min_lr=1e-7,
-        )
+    scheduler_encoder = create_scheduler(
+        CFG.scheduler,
+        optimizer=optimizer_encoder,
+        T_0=30,
+        T_mult=2,
+        eta_max=CFG.learning_rate * 0.1,
+        T_up=5,
+        gamma=0.3
+    )
 
-    return model, criterion, optimizer, scheduler
+    scheduler_decoder = create_scheduler(
+        CFG.scheduler,
+        optimizer=optimizer_decoder,
+        T_0=30,
+        T_mult=2,
+        eta_max=CFG.learning_rate,
+        T_up=5,
+        gamma=0.3
+    )
+
+    return model, criterion, optimizer_encoder, optimizer_decoder, scheduler_encoder, scheduler_decoder
 
 
 def log_images(masks, preds, img_info):
@@ -368,7 +328,7 @@ def func_eval(model, criterion, val_dataset, val_loader, post_crf=False):
     return val_loss, acc, mIoU, mIoU_df, fig_mask
 
 
-def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, train_loader, val_loader):
+def train(model, criterion, optimizer_encoder, optimizer_decoder, scheduler_encoder, scheduler_decoder, train_dataset, val_dataset, train_loader, val_loader):
     print ("Start training.\n")
 
     early_stopping = EarlyStopping(patience=CFG.patience, docs_path=CFG.docs_path, models_path=CFG.models_path, model_name=CFG.model_save_name, verbose=True)
@@ -387,9 +347,11 @@ def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, tr
             # loss 계산 (cross entropy loss)
             loss = criterion(logits, masks)
             
-            optimizer.zero_grad() # reset gradient 
+            optimizer_encoder.zero_grad() # reset gradient 
+            optimizer_decoder.zero_grad() # reset gradient 
             loss.backward() # backward propagation
-            optimizer.step() # parameters update
+            optimizer_encoder.step() # parameters update
+            optimizer_decoder.step() # parameters update
 
             # step 주기에 따른 loss 출력
             if (step + 1) % 25 == 0:
@@ -401,7 +363,8 @@ def train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, tr
             del images, masks, logits
 
         # scheduler step
-        scheduler.step()                 
+        scheduler_encoder.step() 
+        scheduler_decoder.step()                      
 
         # caculate train_loss
         train_loss = train_loss_sum / len(train_dataset)
@@ -455,9 +418,9 @@ def main():
     set_random_seed()
     # data_visualization(train_df)
     train_dataset, val_dataset, train_loader, val_loader = get_data_utils()
-    model, criterion, optimizer, scheduler = get_model()
+    model, criterion, optimizer_encoder, optimizer_decoder, scheduler_encoder, scheduler_decoder = get_model()
     # func_eval(model, criterion, val_dataset, val_loader)
-    train(model, criterion, optimizer, scheduler, train_dataset, val_dataset, train_loader, val_loader)
+    train(model, criterion, optimizer_encoder, optimizer_decoder, scheduler_encoder, scheduler_decoder, train_dataset, val_dataset, train_loader, val_loader)
 
     wandb.finish()
 

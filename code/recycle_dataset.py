@@ -28,7 +28,7 @@ class RecycleDataset(Dataset):
         
         # cv2 를 활용하여 image 불러오기
         image = cv2.imread(os.path.join(self.data_path, image_infos['file_name']))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) #.astype(np.float32)
         
         if (self.mode in ('train', 'val')):
             ann_ids = self.coco.getAnnIds(imgIds = image_infos['id']) # Get ann ids which is related to image_id
@@ -42,7 +42,7 @@ class RecycleDataset(Dataset):
             for i in range(len(anns)):
                 pixel_value = anns[i]['category_id'] + 1
                 mask = np.maximum(self.coco.annToMask(anns[i]) * pixel_value, mask) # Convert annotation to binary mask
-            mask = mask.astype(np.float32)
+            # mask = mask.astype(np.float32)
 
             # transform -> albumentations 라이브러리 활용
             if self.transform:
@@ -50,6 +50,7 @@ class RecycleDataset(Dataset):
                 image = transformed["image"]
                 mask = transformed["mask"]
             
+            image = image.float()
             return image, mask, image_infos
         
         if self.mode == 'test':

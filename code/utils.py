@@ -77,7 +77,7 @@ def add_hist(hist, label_trues, label_preds, n_class):
 # https://github.com/Bjarten/early-stopping-pytorch
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience."""
-    def __init__(self, patience=7, verbose=False, delta=0, path='checkpoint.pt', trace_func=print):
+    def __init__(self, patience=7, verbose=False, delta=0, docs_path='docs', models_path='models', model_name='checkpoint.pt', trace_func=print):
         """
         Args:
             patience (int): How long to wait after last time validation loss improved.
@@ -98,12 +98,20 @@ class EarlyStopping:
         self.early_stop = False
         self.val_loss_min = np.Inf
         self.delta = delta
-        self.path = path
         self.trace_func = trace_func
         self.best_metric = None
+        self.model_name = model_name
+
+        self.validation_path = os.path.join(docs_path, 'validation', model_name)
+        if not os.path.isdir(self.validation_path):
+            os.mkdir(self.validation_path)
+
+        self.model_path = os.path.join(models_path, model_name)
+        if not os.path.isdir(self.model_path):
+            os.mkdir(self.model_path)
 
 
-    def __call__(self, model, val_loss=None, mIoU=None, plt=None, docs_path=None, model_name=None, metric=None, epoch=None):
+    def __call__(self, model, val_loss=None, mIoU=None, plt=None, metric=None, epoch=None):
         if val_loss:
             score = -val_loss
         
@@ -125,14 +133,14 @@ class EarlyStopping:
 
             if self.best_score is None:
                 self.best_score = np.inf
-                self.save_checkpoint_score(score, model, plt, docs_path, model_name, metric, epoch)
+                self.save_checkpoint_score(score, model, plt, metric, epoch)
             elif score < self.best_score + self.delta:
                 self.counter += 1
                 self.trace_func(f'EarlyStopping counter: {self.counter} out of {self.patience}')
                 if self.counter >= self.patience:
                     self.early_stop = True
             else:
-                self.save_checkpoint_score(score, model, plt, docs_path, model_name, metric, epoch)
+                self.save_checkpoint_score(score, model, plt, metric, epoch)
                 self.counter = 0
 
 
@@ -144,14 +152,14 @@ class EarlyStopping:
         self.val_loss_min = val_loss
 
 
-    def save_checkpoint_score(self, score, model, plt, docs_path, model_name, metric, epoch):
+    def save_checkpoint_score(self, score, model, plt, metric, epoch):
         '''Saves model when mIoU score decrease.'''
         if self.verbose:
             self.trace_func(f'score increased ({self.best_score:.6f} --> {score:.6f}).  Saving model ...')
         
         if score > 0.5:
-            torch.save(model.state_dict(), f"{self.path}_{epoch}.pt")
-        plt.savefig(os.path.join(docs_path, 'validation', f"{model_name}_{epoch}.png"))
+            torch.save(model.state_dict(), os.path.join(self.model_path, f"{self.model_name}_{epoch}.pt"))
+            plt.savefig(os.path.join(self.validation_path, f"{self.model_name}_{epoch}.png"))
         self.best_score = score
         self.best_metric = metric
 
@@ -181,6 +189,7 @@ def dense_crf(img, output_probs):
     Q = d.inference(MAX_ITER)
     Q = np.array(Q).reshape((c, h, w))
     return Q
+
 
 def dense_crf_wrapper(args):
     return dense_crf(args[0], args[1])
