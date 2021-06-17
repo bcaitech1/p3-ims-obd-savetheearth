@@ -80,7 +80,7 @@
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
                                     <!-- <div class="card-body"> #이미지 입력받고 가운데정렬하기</div> -->
-                                    <form action="{% url 'upload_create' %}" method="POST" enctype="multipart/form-data">
+                                    <form style="border:1px solid lightgrey; color:black; background-color:LightGrey;" action="{% url 'upload_create' %}" method="POST" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         이미지 업로드<br>
                                         <input type="file" name="image"><br>

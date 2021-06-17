@@ -35,7 +35,7 @@
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="layout-static.html">개요영어로(깃헙 readme 정리)</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Code(깃헙연결)</a>
+                                    <a class="nav-link" href="https://github.com/hcworkplace/p3-ims-obd-savetheearth/tree/main/segmentation_baseline_apeach">Github</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
@@ -50,7 +50,7 @@
                                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                     </a>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                        Code 깃헙연결
+                                        <a href = 'https://github.com/hcworkplace/p3-ims-obd-savetheearth/tree/main/object_detection_mmdetection'>Github</a>>
                                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                     </a>
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
@@ -124,22 +124,6 @@
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
                                         Seg 결과 여기에
-                                        <!-- 자바스크립트로 output 시각화 -->
-                                        <script>
-                                          function result(model){ //일단 fpn으로 돌려보고 나중에 일반화
-                                              url = '../static/models/' + str(model)
-                                              seg_model = smp.FPN(encoder_name="timm-efficientnet-b4",
-                                                                  encoder_weights="noisy-student",
-                                                                  in_channels=3,
-                                                                  classes=12)
-                                              model = load_state_dict(url) // pth 파일 불러오기
-                                              output = model(input) // 결과 예측
-                                              // crf하기
-                                              // 결과 시각화
-                                              
-                                          }
-                                          result('FPN_effb4_ns_Fold2.pt');
-                                      </script>
                                     </div>
                                     <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                                 </div>
