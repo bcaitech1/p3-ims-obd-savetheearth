@@ -1,6 +1,8 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+from PIL import Image
+from albumentations import Resize
 
 def log_images(masks,image):
     colors =[
@@ -20,13 +22,18 @@ def log_images(masks,image):
     colors = np.array(colors).astype('uint8')
 
     fig, axes = plt.subplots(2, 2, figsize=(3*2, 3*2))
-    for i in range(2):
-      image = np.array(image)
+    Re=Resize(512,512)
 
-      answer = ((0.4 * image) + (0.6 * colors[masks[i]])).astype('uint8')
-      # answer = masks[i]
+    for i in range(1):
+      pil_image = Image.open(image)
+      img=pil_image.transpose(Image.ROTATE_270)
+      image = np.array(img)
+      img=Re(image=image)['image']
 
-      axes[0,i].imshow(answer)
-      axes[0,i].set_title(np.unique(masks[i]))
+      answer = ((0.4 * img) + (0.6 * colors[masks[i]])).astype('uint8')
 
-    return fig
+      # axes[0,i].imshow(answer)
+      # axes[0,i].set_title(np.unique(masks[i]))
+      result_img = Image.fromarray(answer)
+
+    return result_img

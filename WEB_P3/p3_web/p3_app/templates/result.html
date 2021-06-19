@@ -80,9 +80,7 @@
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body"> 
-                                        {% if form.image %}
-                                            <img src="{{ form.image.url }}" >
-                                        {% endif %}
+                                        <img style="max-width: 40%; height: auto;" src="{{ seg_res_path }}" >
                                     </div>
                                     <!-- <div class="card-footer d-flex align-items-center justify-content-between">
                                         <a class="small text-white stretched-link" href="#">View Details</a>
@@ -123,18 +121,26 @@
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
-                                        Seg 결과 여기에
+                                        Segmentation 결과
                                     </div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas>
+                                        <div class="card-body"> 
+                                            <img style="max-width: 70%; height: auto;" src="{{ seg_res_path }}" >
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                        Obj 결과 여기에
+                                        Object Detection 결과
                                     </div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas>
+                                        <div class="card-body"> 
+                                            <img style="max-width: 70%; height: auto;" src="{{ seg_res_path }}" >
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
