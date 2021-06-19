@@ -1,2 +1,4 @@
 db.sqlite3
 p3_models
+.ipynb_checkpoints
+*.jpg

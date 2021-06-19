@@ -20,20 +20,12 @@ def log_images(masks,image):
         [248, 243, 212],
     ]
     colors = np.array(colors).astype('uint8')
-
-    fig, axes = plt.subplots(2, 2, figsize=(3*2, 3*2))
     Re=Resize(512,512)
-
-    for i in range(1):
-      pil_image = Image.open(image)
-      img=pil_image.transpose(Image.ROTATE_270)
-      image = np.array(img)
-      img=Re(image=image)['image']
-
-      answer = ((0.4 * img) + (0.6 * colors[masks[i]])).astype('uint8')
-
-      # axes[0,i].imshow(answer)
-      # axes[0,i].set_title(np.unique(masks[i]))
-      result_img = Image.fromarray(answer)
+    pil_image = Image.open(image)
+    img=pil_image.transpose(Image.ROTATE_270)
+    image = np.array(img)
+    img=Re(image=image)['image']
+    answer = ((0.4 * img) + (0.6 * colors[masks[0]])).astype('uint8')
+    result_img = Image.fromarray(answer)
 
     return result_img
