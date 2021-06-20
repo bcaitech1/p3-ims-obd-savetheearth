@@ -10,8 +10,160 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="../static/css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
+
+        <style>
+            @font-face {
+                font-family: 'Handon3gyeopsal300g';
+                src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.2/Handon3gyeopsal300g.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
+            .inline-block{
+                display: inline-block;
+            }
+            body{
+                font-family: 'Handon3gyeopsal300g';
+            }
+            @import url(https://fonts.googleapis.com/css?family=Lato:300);
+
+            .box:nth-child(2n-1){
+                background-color: rgba(0,0,0,0.05);
+            }
+
+            .box{
+                display: inline-block;
+                height: 200px;
+                width: 33.3%;
+                float:left;
+                position: relative;
+                /*margin:0 -4px -5px -2px;*/
+                transition: all .2s ease;
+            }
+
+            .box p{
+                color: rgb(47, 99, 160);
+                font-family:  Lato,"Helvetica Neue" ;
+                font-weight: 300;
+                position: absolute;
+                font-size: 20px;
+                width: 100%;
+                height: 25px;
+                text-align: center;
+                bottom: 0px;
+                margin: 0;
+                top:160px;
+                background-color: #fff;
+                opacity: 0;
+                text-transform: uppercase;
+                transition: all .2s ease;
+            }
+
+            .box:hover p{
+                bottom:0px;
+                top:175px;
+                left:50%;
+                opacity: 1;
+                transition: all .2s ease;
+                z-index: 2;
+            }
+
+            /* MEDIA QUERIES */
+            @media (max-width: 700px){
+                .box{
+                    width: 100%;
+                }
+                .box:nth-child(2n-1){
+                    background-color: inherit;
+                }
+                .box:nth-child(4n),.box:nth-child(4n-3) {
+                    background-color: rgba(0,0,0,0.05);
+                }
+            }
+
+            @media (max-width: 420px){
+                .box{
+                    width: 100%;
+                }
+
+                .box:nth-child(4n),.box:nth-child(4n-3){
+                    background-color: inherit;
+                }
+
+                .box:nth-child(2n-1){
+                    background-color:rgba(0,0,0,0.05);
+                }
+            }
+
+            /* -------------- loader4 -------------- */
+            .loader4{
+                position: relative;
+                width: 150px;
+                height: 20px;
+                top: 80%;
+                /* top: -webkit-calc(50% - 10px);
+                top: calc(50% - 10px); */
+                left: 80%;
+                /* left: -webkit-calc(50% - 75px);
+                left: calc(50% - 75px); */
+                background-color: rgba(255,255,255,0.2);
+            }
+
+            .loader4:before{
+                content: "";
+                position: absolute;
+                background-color: rgb(47, 99, 160);
+                top: 0px;
+                left: 50%;
+                height: 20px;
+                width: 0px;
+                z-index: 0;
+                opacity: 1;
+                -webkit-transform-origin:  100% 0%;
+                    transform-origin:  100% 0% ;
+                -webkit-animation: loader4 10s ease-in-out infinite;
+                    animation: loader4 10s ease-in-out infinite;
+            }
+
+            .loader4:after{
+                content: "LOADING ...";
+                color: rgb(47, 99, 160);
+                font-family:  Lato,"Helvetica Neue" ;
+                font-weight: 200;
+                font-size: 16px;
+                position: absolute;
+                width: 100%;
+                height: 20px;
+                line-height: 20px;
+                left: 50%;
+                top: 0;
+            }
+
+            @-webkit-keyframes loader4{
+                0%{width: 0px;}
+                70%{width: 100%; opacity: 1;}
+                90%{opacity: 0; width: 100%;}
+                100%{opacity: 0;width: 0px;}
+            }
+
+            @keyframes loader4{
+                0%{width: 0px;}
+                70%{width: 100%; opacity: 1;}
+                90%{opacity: 0; width: 100%;}
+                100%{opacity: 0;width: 0px;}
+            }
+        </style>
+
     </head>
     <body class="sb-nav-fixed">
+        
+
+
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.html">Save the Earth</a>
@@ -55,7 +207,6 @@
                                     </a>
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <!-- <a class="nav-link" href="401.html">401 Page</a> -->
                                             <h1>여기다 깃허브 redirect</h1>
                                         </nav>
                                     </div>
@@ -64,84 +215,106 @@
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                        <div class="small">Save The Earth:</div>
+                        AI boostCamp
                     </div>
                 </nav>
             </div>
+
+            
             <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Save the Earth</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Semantic Segmentation & Object Detection with trash image data</li>
-                        </ol>
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <!-- <div class="card-body"> #이미지 입력받고 가운데정렬하기</div> -->
-                                    <form style=" color:black; background-color:LightGrey;" action="{% url 'upload_create' %}" method="POST" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        이미지 업로드<br>
-                                        <input sytle="color:white;"type="file" name="image"><br>
-                                        <input style="text-align:center;" type="submit" value="Submit" />
-                                    </form>
-                                    <!-- <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div> -->
-                                </div>
+                
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Save the Earth</h1>
+                    <p style="color:lightgray">Semantic Segmentation & Object Detection with trash image data</p>
+                    <div class="d-flex justify-content-between">
+                        <!-- Input Image Start  -->
+                        <div class="col-xl-5 col-md-6">
+                            <div class="alert alert-info">
+                                <center><strong>확인하고 싶은 이미지 업로드!</strong></center>
                             </div>
-                            <!-- <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">Warning Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+
+                            <!-- Thumbnail -->
+                            <div style="text-align: center; padding-bottom:10px;" id="image_container">
+                                <div style='background-color:#e9ecf3; margin:auto; border-radius: 30px; width:350px; height:350px;' id='thumbnail'>
+                                    <!-- <i style="color:#282828;width:50; height:50; margin-top: 150px;" class="fas fa-upload"></i> -->
+                                    <h5 style="color:#282828; padding-top:170px;">파일 업로드(최대 30MB)</h5>
+                                </div> 
+                            </div>
+
+                            <div class="mb-4">
+                                
+                                <div class="custom-file mb-3">
+                                    <input  type="file" class="custom-file-input" id="customFile" accept="image/*"
+                                            onchange="setThumbnail(event);" name="image" required>
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                </div>
+                                <button  type="submit" class="btn btn-secondary" onclick="send_data()" >Submit</button>
+
+                            
+                                <!-- The Modal -->
+                                <div class="modal fade" id="myModal" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Oops...</h4>
+                                                <button type="button" class="close" data-dismiss="modal">×</button>
+                                            </div>
+                                            
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                Please select a file...
+                                            </div>
+                                            
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                            </div>
+                                            
+                                        </div>
                                     </div>
                                 </div>
+                                <!-- Modal End --> 
                             </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Success Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Danger Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
-                        <!-- <div class="row">
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        Seg 결과 여기에
+                        
+                        <!-- Input Image End  -->
+                        
+                        <!-- result Start -->
+                        <div class="col-xl-6">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href='#menu1'>Segmentation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href='#menu2'>Object Detection</a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div style='margin-bottom: 50px;' class="tab-content">
+                                <div style="text-align:center;"  id="menu1" class="container tab-pane active"><br>
+                                    <div style="display:none" class="box">
+                                        <div class='loader4'></div>
                                     </div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                                    <img id='seg' >
+                                </div>
+                                <div style="text-align:center;"  id="menu2" class="container tab-pane fade"><br>
+                                    <div style="display:none" class="box">
+                                        <div class='loader4'></div>
+                                    </div>
+                                    <img id='det' >
                                 </div>
                             </div>
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        Obj 결과 여기에
-                                    </div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div>
-                        </div> -->
+                        </div>
+                        <!-- result End -->
                     </div>
-                </main>
+                </div>
+                
+
+                
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -156,6 +329,102 @@
                 </footer>
             </div>
         </div>
+
+        <!-- Get file name -->
+        <script>
+            // Add the following code if you want the name of the file appear on select
+            $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
+
+        <!-- Thumbnail func -->
+        <script>
+            function setThumbnail(event) {        
+                var reader = new FileReader();
+                
+                reader.onload = function(event) { 
+                    var thumbnail = document.getElementById('thumbnail')
+                    var img = document.createElement("img"); 
+                    img.setAttribute("src", event.target.result);
+                    img.setAttribute("id",'thumbnail')
+                    img.setAttribute("width",350);
+                    img.setAttribute("height",350);
+                    document.querySelector("div#image_container").replaceChild(img,thumbnail);
+                }; 
+                reader.readAsDataURL(event.target.files[0]); 
+            }
+        </script>
+
+        <!-- tab func -->
+        <script>
+            $(document).ready(function(){
+                $(".nav-tabs a").click(function(){
+                    $(this).tab('show');
+                });
+            });
+        </script>
+        
+
+        <!-- ajax -->
+        <script>
+            function send_data(){
+                // null input
+                if ($('#customFile')[0].files.length == 0){
+                    console.log('not input')
+                    $("#myModal").modal('show');
+                    return;
+                }
+
+                // loading 
+                $('.box').show();
+                $('#seg').hide();
+                $('#det').hide();
+                
+                const image=$('#customFile')[0];
+                const formData=new FormData();
+                formData.append("image",image.files[0]);
+
+                $.ajax({
+                    url: "{% url 'upload_create' %}",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                    dataType:"JSON",
+                    success: function (response){
+                        $('.box').hide();
+                        $('#seg').show();
+                        $('#det').show();
+                        var seg = document.getElementById('seg');
+                        var det = document.getElementById('det');
+                        seg.setAttribute("src", response.seg_res_path);
+                        det.setAttribute("src", response.det_res_path);
+                    },
+                    error: function(respose){
+                        console.log('error')
+                    },
+                    complete:function(respose){
+                        console.log('complete')
+                    }
+                });
+            }
+        </script>
+
+        <!-- modal func -->
+        <script>
+            $(document).ready(function(){
+                var close=$("button[data-dismiss='modal']")
+                close.click(function(){
+                    $("#myModal").modal('hide');
+                });
+                
+            });
+        </script>
+
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>

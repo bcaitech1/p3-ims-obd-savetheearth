@@ -1,5 +1,6 @@
+import re
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from .models import Input
 from django.conf import settings
 
@@ -15,9 +16,11 @@ import segmentation_models_pytorch as smp
 import numpy as np
 from PIL import Image
 import os
+import json
 
 from .visualize import log_images
 from .detect_model.detection_result import detection
+from pprint import pprint
 
 MODEL_DIR='./p3_app/static/models'
 SEG_DIR='../media/Seg'
@@ -36,6 +39,9 @@ class SMP_FPN_effb4_ns(nn.Module):
         return x
 
 def upload(request):
+    # 이미지 저장할 폴더 만들기
+    os.makedirs(SEG_DIR, exist_ok=True)
+    os.makedirs(DET_DIR, exist_ok=True)
     return render(request,'index.html')
 
 def seg_result(img):
@@ -43,44 +49,45 @@ def seg_result(img):
     seg_model.load_state_dict(torch.load(os.path.join(MODEL_DIR,'FPN_effb4_ns_Fold0.pt')))
     seg_model.eval()
 
-    pil_image = Image.open(img)
-    img=pil_image.transpose(Image.ROTATE_270)
-    image = np.array(img)
-
     transform = Compose([
                         Resize(512,512),
                         Normalize(
                             mean=[0.46009655, 0.43957878, 0.41827092], std=[0.2108204, 0.20766491, 0.21656131], max_pixel_value=255.0, p = 1.0),
                         ToTensorV2()])
-    image = transform(image=image)['image'].unsqueeze(0)
-    output = seg_model(image)
+    img = transform(image=img)['image'].unsqueeze(0)
+    output = seg_model(img)
 
     return output
 
 def upload_create(request):
-    form=Input()
-    try:
-        form.image=request.FILES['image']
-    except: #이미지가 없을 때
-        pass
-    form.save() #db에 이미지 저장
-    
-    #segmentation
-    seg_res_logits = seg_result(request.FILES['image'])  
-    probs = F.softmax(seg_res_logits, dim=1)
-    probs = probs.data.cpu().numpy()
-    preds = np.argmax(probs, axis=1)
-    seg_res = log_images(preds, form.image) #PIL image리턴
-    Seg_Path = os.path.join(settings.MEDIA_ROOT,'Seg',request.FILES['image'].name)
-    seg_res.save(Seg_Path)
-    
-    #detection
-    det_res=detection(request.FILES['image'])
-    Det_Path=os.path.join(settings.MEDIA_ROOT,'Det',request.FILES['image'].name)
-    det_res.save(Det_Path)
+    if request.is_ajax():
+        print('ajax 통신!!')
+        form=Input()
+        try:
+            form.image=request.FILES['image']
+        except: #이미지가 없을 때
+            pass
+        form.save() #db에 이미지 저장
 
-    return render(request,'result.html',{'seg_res_path':'../media/Seg/'+request.FILES['image'].name,
-                                         'det_res_path':'../media/Det/'+request.FILES['image'].name})
+        # input image로 변환
+        img = Image.open(request.FILES['image']).convert('RGB')
+        img = img.transpose(Image.ROTATE_270)
+        img = np.array(img)
 
+        #segmentation
+        seg_res_logits = seg_result(img)  
+        probs = F.softmax(seg_res_logits, dim=1)
+        probs = probs.data.cpu().numpy()
+        preds = np.argmax(probs, axis=1)
+        seg_res = log_images(preds, img) #PIL image리턴
+        Seg_Path = os.path.join(settings.MEDIA_ROOT,'Seg',request.FILES['image'].name)
+        seg_res.save(Seg_Path)
+        
+        #detection
+        det_res=detection(img)
+        Det_Path=os.path.join(settings.MEDIA_ROOT,'Det',request.FILES['image'].name)
+        det_res.save(Det_Path)
 
-# pip install mmcv-full==1.3.7 -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/index.html
+        context = {'seg_res_path':'../media/Seg/'+request.FILES['image'].name,
+                    'det_res_path':'../media/Det/'+request.FILES['image'].name}
+        return HttpResponse(json.dumps(context), content_type='application/json') 

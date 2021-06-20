@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-def detection(file):
+def detection(img):
     colors =[
         (129, 236, 236),
         (2, 132, 227),
@@ -30,13 +30,10 @@ def detection(file):
     model = init_detector(config, checkpoint, device='cuda:0')
     
     Re=Resize(512,512)
-    pil_image = Image.open(file)
-    img=pil_image.transpose(Image.ROTATE_270)
-    image = np.array(img)
-    img=Re(image=image)
+    img=Re(image=img)['image']
     
-    result = inference_detector(model, img['image'])
-    show_result=model.show_result(img['image'],result,score_thr=0.6,bbox_color=colors,text_color='white',show=False,thickness=3)
+    result = inference_detector(model, img)
+    show_result=model.show_result(img,result,score_thr=0.6,bbox_color=colors,text_color='white',show=False,thickness=3)
     save_img=Image.fromarray(show_result)
     return save_img
     

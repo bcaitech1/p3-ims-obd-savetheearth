@@ -21,9 +21,6 @@ def log_images(masks,image):
     ]
     colors = np.array(colors).astype('uint8')
     Re=Resize(512,512)
-    pil_image = Image.open(image)
-    img=pil_image.transpose(Image.ROTATE_270)
-    image = np.array(img)
     img=Re(image=image)['image']
     answer = ((0.4 * img) + (0.6 * colors[masks[0]])).astype('uint8')
     result_img = Image.fromarray(answer)
