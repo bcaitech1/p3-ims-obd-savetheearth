@@ -157,6 +157,23 @@
                 90%{opacity: 0; width: 100%;}
                 100%{opacity: 0;width: 0px;}
             }
+
+            .list-group-item{
+                font-size:10px;
+                width:100px;
+                display:table-cell;
+                vertical-align:middle;
+                opacity: 0.6;
+                color:white;
+                font-weight:bold;
+            }
+            .list-group.list-group-horizontal{
+                display:table-row;
+            }
+            .legend{
+                font-size:13px;
+                font-weight:bold;
+            }
         </style>
 
     </head>
@@ -293,19 +310,99 @@
                                 </li>
                             </ul>
 
-                            <!-- Tab panes -->
+                            <!-- Segmentation -->
                             <div style='margin-bottom: 50px;' class="tab-content">
                                 <div style="text-align:center;"  id="menu1" class="container tab-pane active"><br>
                                     <div style="display:none" class="box">
                                         <div class='loader4'></div>
                                     </div>
-                                    <img id='seg' >
+                                    <div style="display:none" id='seg_view'>
+                                        <img id='seg'>
+                                        <!-- legend Start -->
+                                        <div style='text-align: left; margin-left:30px; margin-top:10px;'>
+                                            <div style='float: left; width:25%;'>
+                                                {% for color,class_name in list1.items %}
+                                                <p style='color:{{color}};' class='legend'><span >●</span> {{class_name}}</p>
+                                                {% endfor %}
+                                            </div>
+                                            <div style='float: left; width:25%;'>
+                                                {% for color,class_name in list2.items %}
+                                                <p style='color:{{color}};' class='legend'><span >●</span> {{class_name}}</p>
+                                                {% endfor %}
+                                            </div>
+                                            <div style='float: left; width:25%;'>
+                                                {% for color,class_name in list3.items %}
+                                                <p style='color:{{color}};' class='legend'><span >●</span> {{class_name}}</p>
+                                                {% endfor %}
+                                            </div>
+                                            <div style='float: left;'>
+                                                {% for color,class_name in list4.items %}
+                                                <p style='color:{{color}};' class='legend'><span >●</span> {{class_name}}</p>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <!-- legend End -->
+                                    </div>
                                 </div>
+
+                                
+                                <!-- Object Detection -->
                                 <div style="text-align:center;"  id="menu2" class="container tab-pane fade"><br>
                                     <div style="display:none" class="box">
                                         <div class='loader4'></div>
                                     </div>
-                                    <img id='det' >
+                                    <!-- Radio button Start -->
+                                    <div style="display:none" class="container mt-3" id='det_view'>
+                                        <img id='det' >
+                                        <div style="display: inline-block; margin-top:10px;" class="dropup">
+                                            <button id='threshold_btn' type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropup">
+                                            threshold
+                                            </button>
+                                            <div class="dropdown-menu" id="threshold">
+                                                {% for thr in threshold%}
+                                                {% if thr == 0.5 %}
+                                                <div class="dropdown-item" onclick="thr_click(this);">
+                                                    <label >
+                                                        <input type="radio" id="{{thr}}" checked="checked"> {{thr}}
+                                                    </label>
+                                                </div>
+
+                                                {% else %}
+                                                <div class="dropdown-item" onclick="thr_click(this);">
+                                                    <label >
+                                                        <input type="radio" id="{{thr}}"> {{thr}}
+                                                    </label>
+                                                </div>
+                                                {% endif %}
+                                                
+                                                {% endfor %}
+                                            </div>  
+                                        </div>
+                                        <div style="display: inline-block;" class="dropup">
+                                            <button id='class_btn' type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropup">
+                                            Class
+                                            </button>
+                                            <div class="dropdown-menu" id="class">
+                                                <div class="dropdown-item" onclick="cls_click(this);">
+                                                    <label>
+                                                        <input type="radio" id="ALL" checked="checked"> ALL
+                                                    </label>
+                                                </div>
+
+                                                {% for class_name in classes %}
+                                                <div class="dropdown-item" onclick="cls_click(this);">
+                                                    <label>
+                                                        <input type="radio" id="{{class_name}}"> {{class_name}}
+                                                    </label>
+                                                </div>
+                                                {% endfor%}
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block;" >
+                                            <button type="button" class="btn btn-success" onclick="re_submit();">reload</button>
+                                        </div>
+                                    </div>
+                                    <!-- Radio button End -->
                                 </div>
                             </div>
                         </div>
@@ -379,8 +476,8 @@
 
                 // loading 
                 $('.box').show();
-                $('#seg').hide();
-                $('#det').hide();
+                $('#seg_view').hide();
+                $('#det_view').hide();
                 
                 const image=$('#customFile')[0];
                 const formData=new FormData();
@@ -396,12 +493,15 @@
                     dataType:"JSON",
                     success: function (response){
                         $('.box').hide();
-                        $('#seg').show();
-                        $('#det').show();
+                        $('#seg_view').show();
+                        $('#det_view').show();
                         var seg = document.getElementById('seg');
                         var det = document.getElementById('det');
                         seg.setAttribute("src", response.seg_res_path);
                         det.setAttribute("src", response.det_res_path);
+                        seg.setAttribute('data-origin',response.origin_data_path);
+                        det.setAttribute('data-origin',response.origin_data_path);
+                        det.setAttribute('data-result',response.result_data_path);
                     },
                     error: function(respose){
                         console.log('error')
@@ -423,6 +523,78 @@
                 
             });
         </script>
+
+        <!-- object detection buttons func  -->
+        <script>
+            $(document).ready(function(){
+                $(".dropdown-toggle").dropdown();
+            });
+
+            function re_submit(){ 
+                var thr_list = $("#threshold input")
+                var cls_list = $("#class input")
+                var res_thr = ""
+                var res_cls = ""
+
+                for (var i=0; i<thr_list.length; i++){
+                    if ($(thr_list[i]).prop('checked')==true){
+                        res_thr = $(thr_list[i]).attr("id")
+                    }
+                }
+                for (var i=0; i<cls_list.length; i++){
+                    if ($(cls_list[i]).prop('checked')==true){
+                        res_cls = $(cls_list[i]).attr("id")
+                    }
+                }
+                var origin_data=$('#det').data('origin')
+                var result_data=$('#det').data('result')
+                console.log(origin_data);
+                console.log(result_data);
+                $.ajax({
+                    url: "{% url 'detect_by_class' %}",
+                    type: "POST",
+                    data: {'thr':res_thr,'cls':res_cls,'origin_data':origin_data,'result_data':result_data},
+                    headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                    dataType:"JSON",
+                    success: function (response){
+                        console.log(response)
+                        var det = document.getElementById('det');
+                        det.setAttribute("src", response.det_res_path);
+                        
+                        
+                    },
+                    error: function(respose){
+                        console.log('error')
+                    },
+                    complete:function(respose){
+                        console.log('complete')
+                    }
+                });
+
+            }
+
+            function thr_click(node){
+                var thr_list = $("#threshold input")
+                for (var i=0; i<thr_list.length; i++){
+                    $(thr_list[i]).prop('checked',false); 
+                }
+                $(node).find("input").prop("checked",true);
+                $(".dropdown-toggle").dropdown('hide');
+                console.log($(node).find("input").attr("id"));
+                $('#threshold_btn').html($(node).find("input").attr("id"));
+            }
+            function cls_click(node){
+                var cls_list = $("#class input")
+                for (var i=0; i<cls_list.length; i++){
+                    $(cls_list[i]).prop('checked',false); 
+                }
+                $(node).find("input").prop("checked",true);
+                $(".dropdown-toggle").dropdown('hide');
+                console.log($(node).find("input").attr("id"));
+                $('#class_btn').html($(node).find("input").attr("id"));
+            }
+        </script>
+
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

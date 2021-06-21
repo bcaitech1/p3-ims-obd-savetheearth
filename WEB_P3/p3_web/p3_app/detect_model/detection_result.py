@@ -2,11 +2,12 @@ from mmdet.apis import inference_detector, init_detector, show_result_pyplot
 
 from PIL import Image
 from albumentations import Resize
+import pickle
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-def detection(img):
+def detection(img,result_data=None,thr=0.5,cls='ALL'):
     colors =[
         (129, 236, 236),
         (2, 132, 227),
@@ -31,9 +32,12 @@ def detection(img):
     
     Re=Resize(512,512)
     img=Re(image=img)['image']
-    
-    result = inference_detector(model, img)
-    show_result=model.show_result(img,result,score_thr=0.6,bbox_color=colors,text_color='white',show=False,thickness=3)
+    if not result_data:
+        result = inference_detector(model, img)
+    else:
+        result = result_data
+    show_result=model.show_result(img,result,score_thr=thr,bbox_color=colors,
+                                    text_color='white',show=False,thickness=3,select_class=cls)
     save_img=Image.fromarray(show_result)
-    return save_img
+    return save_img, result
     

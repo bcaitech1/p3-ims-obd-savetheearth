@@ -53,7 +53,7 @@ def imshow_det_bboxes(img,
                       show=True,
                       wait_time=0,
                       out_file=None,
-                      select_class='all'):
+                      select_class='ALL'):
     """Draw bboxes and class labels (with scores) on an image.
 
     Args:
@@ -141,7 +141,7 @@ def imshow_det_bboxes(img,
     polygons = []
     color = []
     for i, (bbox, label) in enumerate(zip(bboxes, labels)):
-        if select_class == 'all' or class_names[label] == select_class:
+        if select_class == 'ALL' or class_names[label] == select_class:
             bbox_int = bbox.astype(np.int32)
             poly = [[bbox_int[0], bbox_int[1]], [bbox_int[0], bbox_int[3]],
                     [bbox_int[2], bbox_int[3]], [bbox_int[2], bbox_int[1]]]
